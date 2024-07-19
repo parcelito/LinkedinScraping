@@ -1,4 +1,3 @@
-# all in one
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -19,7 +18,7 @@ def linkedin_login(driver, username, password):
     password_input.send_keys(password)
     password_input.send_keys(Keys.RETURN)
     print("Esperando para asegurar que la página se cargue completamente...")
-    time.sleep(30)
+    time.sleep(5)
 
 def search_company(driver, organization):
     print(f"Buscando la empresa {organization}...")
@@ -33,7 +32,8 @@ def scroll_to_bottom(driver):
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(3)
 
-def extract_profiles(driver, results):
+def extract_profiles(driver):
+    results = []
     index = 1
     while True:
         try:
@@ -44,6 +44,7 @@ def extract_profiles(driver, results):
         except Exception as e:
             print(f"Error al obtener perfil {index}: {e}")
             break  # Salir del bucle cuando no se encuentren más perfiles en la página actual
+    return results
 
 def go_to_next_page(driver):
     next_button_xpath = "//button[@class='artdeco-button artdeco-button--muted artdeco-button--icon-right artdeco-button--1 artdeco-button--tertiary ember-view artdeco-pagination__button artdeco-pagination__button--next']"
@@ -88,18 +89,25 @@ if __name__ == "__main__":
         print("esperando 5 segundos")
         time.sleep(5)
         
-        results = []
-        
+        all_results = []
+        #results = extract_profiles(driver)
+        #all_results.extend(results)
+
+
         # Ejemplo de cómo utilizar la función go_to_next_page en un bucle
         while True:
-            extract_profiles(driver, results)
+            results = extract_profiles(driver)
+            all_results.extend(results)
+            print("Nombres de los perfiles encontrados:")
+            for result in all_results:
+                print(result)
             if not go_to_next_page(driver):
                 break
             print("Página avanzada con éxito")
         
-        print("Nombres de los perfiles encontrados:")
-        for result in results:
-            print(result)
+        #print("Nombres de los perfiles encontrados:")
+        #for result in all_results:
+        #    print(result)
         
     except Exception as e:
         print(f"An error occurred: {e}")
