@@ -18,7 +18,7 @@ def linkedin_login(driver, username, password):
     password_input.send_keys(password)
     password_input.send_keys(Keys.RETURN)
     print("Esperando para asegurar que la página se cargue completamente...")
-    time.sleep(5)
+    time.sleep(50)
 
 def search_company(driver, organization):
     print(f"Buscando la empresa {organization}...")
@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
     try:
         linkedin_login(driver, username, password)
+        time.sleep(50)
         print("Login successful. Buscando perfiles de la empresa...")
         search_company(driver, organization)
         print("esperando 5 segundos")
